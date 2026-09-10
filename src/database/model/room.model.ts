@@ -1,14 +1,25 @@
 import mongoose, { Schema, Types } from 'mongoose'
-import { hashAndEncryptHook } from '../globalHooks.js'
+export interface IRoom {
+  roomNumber: number
+  roomType: Types.ObjectId
+  reservoirId: Types.ObjectId
+  reservationFrom: Date
+  reservationTo: Date
+  price: Number
+  roomCapacity: Number
+  available: boolean
+}
 
-const roomSchema = new Schema(
+const roomSchema = new Schema<IRoom>(
   {
-    roomNumber: { type: String, required: true },
-    roomType: { type: String, required: true },
-    reserveFor: { type: Types.ObjectId, ref: 'users', required: true },
-    reservationFrom: { type: Date, required: true },
-    reservationTo: { type: Date, required: true },
+    roomNumber: { type: Number, required: true, unique: true },
+    roomType: { type: Types.ObjectId, required: true, ref: 'roomstypes' },
+    reservoirId: { type: Types.ObjectId, ref: 'users', default: null },
+    reservationFrom: { type: Date, default: null },
+    reservationTo: { type: Date, default: null },
     price: { type: Number, required: true },
+    roomCapacity: { type: Number, default: 1 },
+    available: { type: Boolean, default: true },
   },
   {
     toObject: { virtuals: true },
@@ -17,6 +28,6 @@ const roomSchema = new Schema(
     strictQuery: true,
   },
 )
-const userModel = mongoose.models.users || mongoose.model('rooms', roomSchema)
+const RoomModel = mongoose.models.Rooms || mongoose.model('rooms', roomSchema)
 
-export default userModel
+export default RoomModel
