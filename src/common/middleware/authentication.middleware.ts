@@ -7,8 +7,13 @@ import {
   SECRET_USER_ACCESS_TOKEN,
 } from '../../config/config.js'
 import userRepo from '../../database/repo/user.repo.js'
+import type { HUDoc } from '../../database/model/user.model.js'
 
-async function authenticate(req: Request, res: Response, next: NextFunction) {
+export async function authenticate(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   const { authorization } = req.headers
   if (!authorization) {
     return ErrorRedirect('please login before getting further', {
@@ -25,7 +30,7 @@ async function authenticate(req: Request, res: Response, next: NextFunction) {
   }
 
   const decode = TokenVerify({ token: token!, secret })
-  const user = await userRepo.findById({ id: decode.data.userId })
+  const user = (await userRepo.findById({ id: decode.data.userId })) as HUDoc
 
   req.user = user
 

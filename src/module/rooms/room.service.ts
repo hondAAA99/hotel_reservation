@@ -1,8 +1,12 @@
+import { reservationStatus } from '../../common/enum/reservation.base.enum.js'
+import { paymentService } from '../../common/service/payment.service.js'
 import {
   ErrorBadRequest,
   ErrorInternalServerError,
   ErrorNotFound,
 } from '../../common/utils/ErrorHandlers.js'
+import type { HUDoc } from '../../database/model/user.model.js'
+import reservationRepo from '../../database/repo/reservation.repo.js'
 import roomRepo from '../../database/repo/room.repo.js'
 import roomTypesRepo from '../../database/repo/roomTypes.repo.js'
 import userRepo from '../../database/repo/user.repo.js'
@@ -18,6 +22,8 @@ class roomServices {
     private readonly _userRepo = userRepo,
     private readonly _roomRepo = roomRepo,
     private readonly _roomTypesRepo = roomTypesRepo,
+    private readonly _reservationRepo = reservationRepo,
+    private readonly _payment = new paymentService(),
   ) {}
 
   async getRoomTypes() {
@@ -62,7 +68,7 @@ class roomServices {
     }
   }
 
-  async confirmBooking(body: confirmBookingSchemaDTO) {
+  async Booking(body: confirmBookingSchemaDTO, user: HUDoc) {
     const {
       roomNumber,
       roomType,
@@ -117,6 +123,16 @@ class roomServices {
       },
     })
 
+    const { id } = await this._reservationRepo.create({
+      discount,
+      guestId: user._id,
+      guests,
+      nightPrice,
+      nights,
+      roomId: room._id,
+      total,
+    })
+
     return {
       message: 'booking confirmed successfully',
       stay: {
@@ -139,6 +155,7 @@ class roomServices {
         discount,
         total,
       },
+      reservationID: id,
     }
   }
 
@@ -155,6 +172,44 @@ class roomServices {
         populate: [{ path: 'roomType', select: 'roomAdvantages name -_id' }],
       },
     })
+  }
+
+  async checkout(id: string) {
+    const reservation = await this._reservationRepo.findOne({
+      filter: { _id: id, paid: reservationStatus.pending },
+    })
+
+    if (!reservation) {
+      throw ErrorNotFound('reservation not found')
+    }
+
+    const user = await this._userRepo.findById({ id: reservation.guestId })
+    if (!user) {
+      throw ErrorNotFound('user not found')
+    }
+
+    const session = await this._payment.checkout({
+      customer_email: user.email,
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Hotel Booking',
+            },
+            unit_amount: Math.round(reservation.total * 100),
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: 'http://localhost:3000/success',
+      cancel_url: 'http://localhost:3000/cancel',
+    })
+
+    return {
+      url: session.url,
+    }
   }
 }
 

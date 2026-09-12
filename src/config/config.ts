@@ -17,3 +17,6 @@ export const ENCRYPTION_ALGORITM = process.env.ENCRYPTION_ALGORITM as string
 export const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY as string
 export const PREFIX_ADMIN_TOKEN = process.env.PREFIX_ADMIN_TOKEN as string
 export const PREFIX_USER_TOKEN = process.env.PREFIX_USER_TOKEN as string
+export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY as string
+export const CANCEL_URL = process.env.CANCEL_URL as string
+export const SUCCESS_URL = process.env.SUCCESS_URL as string

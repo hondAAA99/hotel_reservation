@@ -8,7 +8,7 @@ import {
   confirmBookingSchema,
   searchRoomSchema,
 } from './room.validation.schema.js'
-import type { searchRoomSchemaDTO } from './room.dto.js'
+import { authenticate } from '../../common/middleware/authentication.middleware.js'
 
 const roomsRouter = Router()
 const Service = roomServices
@@ -51,11 +51,12 @@ roomsRouter.post(
 
 roomsRouter.post(
   '/confirm',
+  authenticate,
   validation(confirmBookingSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     return SuccessResponse({
       res,
-      data: await Service.confirmBooking(req.body),
+      data: await Service.Booking(req.body, req.user!),
       statusCode: 201,
     })
   },
@@ -68,6 +69,18 @@ roomsRouter.get(
     return SuccessResponse({
       res,
       data: await Service.searchAvailableRooms(req.query as any),
+      statusCode: 200,
+    })
+  },
+)
+
+roomsRouter.get(
+  '/confirm-stripe',
+  authenticate,
+  async (req: Request, res: Response, next: NextFunction) => {
+    return SuccessResponse({
+      res,
+      data: await Service.checkout(req.params.id as string),
       statusCode: 200,
     })
   },
