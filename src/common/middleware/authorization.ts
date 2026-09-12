@@ -3,7 +3,7 @@ import { ErrorForbidden } from '../utils/ErrorHandlers.js'
 
 export function authorization(roles: string[]) {
   return (req: Request, res: Response, next: NextFunction) => {
-    if (!roles.map((role: string) => role == req.user.roleId)) {
+    if (!roles.map((role: string) => role == req.user?.role)) {
       return ErrorForbidden()
     }
 
