@@ -19,6 +19,10 @@ abstract class BaseRepo<Tdocument> {
     return await this._model.create(data)
   }
 
+  async insertMany(data: Tdocument[]) {
+    return await this._model.insertMany(data)
+  }
+
   async findAll({
     filter,
     options,
