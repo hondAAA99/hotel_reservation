@@ -49,6 +49,17 @@ roomsRouter.post(
   },
 )
 
+roomsRouter.get(
+  '/',
+  validation(searchRoomSchema),
+  async (req: Request, res: Response, next: NextFunction) => {
+    return SuccessResponse({
+      res,
+      data: await Service.searchAvailableRooms(req.query as any),
+      statusCode: 200,
+    })
+  },
+)
 roomsRouter.post(
   '/confirm',
   authenticate,
@@ -61,21 +72,8 @@ roomsRouter.post(
     })
   },
 )
-
 roomsRouter.get(
-  '/',
-  validation(searchRoomSchema),
-  async (req: Request, res: Response, next: NextFunction) => {
-    return SuccessResponse({
-      res,
-      data: await Service.searchAvailableRooms(req.query as any),
-      statusCode: 200,
-    })
-  },
-)
-
-roomsRouter.get(
-  '/confirm-stripe',
+  '/confirm-stripe/:id',
   authenticate,
   async (req: Request, res: Response, next: NextFunction) => {
     return SuccessResponse({

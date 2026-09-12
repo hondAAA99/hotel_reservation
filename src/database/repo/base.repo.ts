@@ -149,10 +149,10 @@ abstract class BaseRepo<Tdocument> {
     search?: QueryFilter<Tdocument>
     options?: QueryOptions<Tdocument>
   }) {
-    page = !page || page < 0 ? 2 : Number(page)
+    page = !page || page < 0 ? 1 : Number(page)
     let limit = 20
 
-    let skip = (limit - 1) * page
+    let skip = (page - 1) * limit
 
     const [data, totalDoc]: [any, number] = await Promise.all([
       this.findAll({

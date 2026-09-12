@@ -9,7 +9,7 @@ const Service = authService
 
 authRouter.post(
   '/',
-  validation(signUpSchema),
+  // validation(signUpSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     return SuccessResponse({
       res,
@@ -21,7 +21,7 @@ authRouter.post(
 
 authRouter.get(
   '/',
-  validation(signInSchema),
+  // validation(signInSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await Service.signIn(req.body)

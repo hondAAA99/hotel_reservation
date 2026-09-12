@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express'
-import { ErrorResponse } from '../utils/ErrorHandlers.js' 
+import { ErrorResponse } from '../utils/ErrorHandlers.js'
 
 export const globalErrorHandling = (
   err: ErrorResponse,
@@ -10,7 +10,7 @@ export const globalErrorHandling = (
   const status = (err.statusCode as number) || 500
   res.status(status).json({
     status,
-    err: { message: err.message, cause: err.cause },
+    err: { message: err.message , extra : err.stack },
     stack: err.stack,
   })
 }

@@ -28,6 +28,6 @@ const roomSchema = new Schema<IRoom>(
     strictQuery: true,
   },
 )
-const RoomModel = mongoose.models.Rooms || mongoose.model('rooms', roomSchema)
+const RoomModel = mongoose.models.rooms || mongoose.model('rooms', roomSchema)
 
 export default RoomModel

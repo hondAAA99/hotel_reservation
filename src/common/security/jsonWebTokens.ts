@@ -2,7 +2,7 @@ import jsonwebtoken from 'jsonwebtoken'
 export function generateToken(
   payload: { userId: string; role: string },
   secret: string,
-  options: any = { expiresIn: 3 * 60 },
+  options: any = { expiresIn: 3 * 60 * 1000 },
 ) {
   return jsonwebtoken.sign(payload, secret, options)
 }

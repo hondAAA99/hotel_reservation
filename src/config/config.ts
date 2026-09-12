@@ -1,7 +1,8 @@
 import { config } from 'dotenv'
 config({})
 
-export const DATA_BASE_URI = process.env.DATA_BASE_URI as string
+export const DATA_BASE_URI_LOCAL = process.env.DATA_BASE_URI_LOCAL as string
+export const DATA_BASE_URI_ONLINE = process.env.DATA_BASE_URI_ONLINE as string
 export const PORT = process.env.PORT as string
 export const SECRET_ADMIN_ACCESS_TOKEN = process.env
   .SECRET_ADMIN_ACCESS_TOKEN as string

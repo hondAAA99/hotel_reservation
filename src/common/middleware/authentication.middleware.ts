@@ -30,7 +30,7 @@ export async function authenticate(
   }
 
   const decode = TokenVerify({ token: token!, secret })
-  const user = (await userRepo.findById({ id: decode.data.userId })) as HUDoc
+  const user = (await userRepo.findById({ id: decode.userId })) as HUDoc
 
   req.user = user
 

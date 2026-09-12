@@ -5,7 +5,7 @@ import { roomTypeEnum } from '../../common/enum/room.enum.js'
 export const addRoomTypeSchema = {
   body: z.object({
     name: genRules.userName,
-    advantages: genRules.advantages,
+    roomAdvantages: genRules.roomAdvantages,
   }),
 }
 
@@ -22,9 +22,9 @@ export const confirmBookingSchema = {
   body: z.object({
     roomNumber: z.number().int().positive(),
     roomType: z.enum(roomTypeEnum),
-    checkIn: z.coerce.date(),
-    checkout: z.coerce.date(),
-    guests: z.number().int().positive(),
+    checkIn: genRules.dates,
+    checkout: genRules.dates,
+    guests: genRules.guests,
     fullName: z.string().min(2),
     email: z.email(),
     phone: z.string().min(8),
@@ -33,17 +33,10 @@ export const confirmBookingSchema = {
 }
 
 export const searchRoomSchema = {
-  query: z
-    .object({
-      roomType: z.enum(roomTypeEnum),
-      guests: z.number().transform(val => (val ? Number(val) : 1)),
-      checkIn: z.date(),
-      checkout: z.date(),
-      page: z.number().transform(val => (val ? Number(val) : 0)),
-    })
-    .superRefine((data, ctx) => {
-      if (data.checkIn.getMilliseconds > data.checkout.getMilliseconds) {
-        ctx.addIssue('invalid date params')
-      }
-    }),
+  query: z.object({
+    guests: genRules.guests,
+    checkIn: genRules.dates,
+    checkout: genRules.dates,
+    page: z.string().transform(val => (val ? Number(val) : 0)),
+  }),
 }

@@ -8,11 +8,13 @@ export const genRules = {
   phone: z.string(),
   DateOfBirth: z.date(),
   nationality: z.string(),
-  advantages: z.object({
+  roomAdvantages: z.object({
     beds: z.string().min(1),
     view: z.string().min(1),
     area: z.string().min(1),
     breakfast: z.string().min(1),
     livingRoom: z.string().min(1).optional(),
   }),
+  dates: z.string().transform(val => (val ? new Date(val) : new Date())),
+  guests: z.transform(val => Number(val)),
 }

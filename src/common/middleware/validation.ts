@@ -14,13 +14,15 @@ export function validation(schema: SchemaType) {
       const { success, error } = schema[key]?.safeParse(req[key])!
 
       if (!success) {
-        errArr.push({
-          name: error.name,
-          message: error.message,
-          stack: error.stack,
-        })
+        errArr.push(
+          JSON.stringify({
+            name: error.name,
+            message: error.message,
+          }),
+        )
       }
     }
+    
     if (errArr.length) return ErrorBadRequest('Bad request exception', errArr)
 
     next()

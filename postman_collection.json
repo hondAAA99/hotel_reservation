@@ -1,0 +1,247 @@
+{
+  "info": {
+    "name": "Hotel Reservation API",
+    "description": "Postman collection for the Hotel Reservation TypeScript Express project.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Authentication endpoints",
+      "item": [
+        {
+          "name": "Sign Up",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userName\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"123456\",\n  \"phone\": \"0500000000\",\n  \"DateOfBirth\": \"2000-01-01\",\n  \"nationality\": \"Jordan\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sign In",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Rooms",
+      "description": "Room management and reservation endpoints",
+      "item": [
+        {
+          "name": "Get Room Types",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/rooms/types",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rooms",
+                "types"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Room Type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"class-A\",\n  \"advantages\": [\"Sea view\", \"Coffee\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rooms/types",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rooms",
+                "types"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Room",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roomNumber\": 101,\n  \"roomType\": \"class-A\",\n  \"price\": 150,\n  \"roomCapacity\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rooms/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rooms",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Available Rooms",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/rooms/?guests=2&page=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rooms",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "guests",
+                  "value": "2"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirm Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"roomNumber\": 101,\n  \"roomType\": \"class-A\",\n  \"checkIn\": \"2026-09-12T14:00:00.000Z\",\n  \"checkout\": \"2026-09-15T14:00:00.000Z\",\n  \"guests\": 2,\n  \"fullName\": \"Test Guest\",\n  \"email\": \"guest@example.com\",\n  \"phone\": \"0500000000\",\n  \"specialRequests\": \"Late check-in\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rooms/confirm",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rooms",
+                "confirm"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Stripe Checkout Session",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rooms/confirm-stripe/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rooms",
+                "confirm-stripe",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "reservation_id_here"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

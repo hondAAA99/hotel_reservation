@@ -1,3 +1,4 @@
+import { log } from 'node:console'
 import { reservationStatus } from '../../common/enum/reservation.base.enum.js'
 import { paymentService } from '../../common/service/payment.service.js'
 import {
@@ -33,12 +34,12 @@ class roomServices {
   }
 
   async addRoomType(body: addRoomTypeSchemaDTO) {
-    const { name, advantages } = body
+    const { name, roomAdvantages } = body
 
     try {
       await this._roomTypesRepo.create({
         name,
-        roomAdvantages: advantages,
+        roomAdvantages,
       })
       return 'room type created successfully'
     } catch (error: any) {
@@ -68,6 +69,29 @@ class roomServices {
     }
   }
 
+  async searchAvailableRooms(query: searchRoomSchemaDTO) {
+    const { guests, checkIn, checkout, page } = query
+
+    return await this._roomRepo.paginate({
+      page,
+      search: {
+        $or: [
+          {
+            available: true,
+          },
+          {
+            available: false,
+            reservationTo: { $lt: checkIn },
+          },
+        ],
+        roomCapacity: { $gte: guests },
+      },
+      options: {
+        populate: [{ path: 'roomType', select: 'roomAdvantages name -_id' }],
+      },
+    })
+  }
+
   async Booking(body: confirmBookingSchemaDTO, user: HUDoc) {
     const {
       roomNumber,
@@ -85,9 +109,12 @@ class roomServices {
       throw ErrorBadRequest('checkout must be after checkin')
     }
 
+
     const nights = Math.max(
       1,
-      Math.round((checkout.getTime() - checkIn.getTime()) / 86400000),
+      Math.round(
+        (new Date(checkout).getTime() - new Date(checkIn).getTime()) / 86400000,
+      ),
     )
 
     const room = await this._roomRepo.findOne({
@@ -157,21 +184,6 @@ class roomServices {
       },
       reservationID: id,
     }
-  }
-
-  async searchAvailableRooms(query: searchRoomSchemaDTO) {
-    const { guests, checkIn, checkout, page } = query
-
-    return await this._roomRepo.paginate({
-      page,
-      search: {
-        available: true,
-        roomCapacity: guests,
-      },
-      options: {
-        populate: [{ path: 'roomType', select: 'roomAdvantages name -_id' }],
-      },
-    })
   }
 
   async checkout(id: string) {
