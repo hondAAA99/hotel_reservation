@@ -9,12 +9,16 @@ import {
   searchRoomSchema,
 } from './room.validation.schema.js'
 import { authenticate } from '../../common/middleware/authentication.middleware.js'
+import { authorization } from '../../common/middleware/authorization.js'
+import { roleEnum } from '../../common/enum/user.enum.js'
 
 const roomsRouter = Router()
 const Service = roomServices
 
 roomsRouter.get(
   '/types',
+  authenticate,
+  authorization([roleEnum.admin]),
   async (req: Request, res: Response, next: NextFunction) => {
     return SuccessResponse({
       res,
@@ -27,6 +31,8 @@ roomsRouter.get(
 roomsRouter.post(
   '/types',
   validation(addRoomTypeSchema),
+  authenticate,
+  authorization([roleEnum.admin]),
   async (req: Request, res: Response, next: NextFunction) => {
     const result = await Service.addRoomType(req.body)
     return SuccessResponse({
@@ -40,6 +46,8 @@ roomsRouter.post(
 roomsRouter.post(
   '/',
   validation(addRoomSchema),
+  authenticate,
+  authorization([roleEnum.admin]),
   async (req: Request, res: Response, next: NextFunction) => {
     return SuccessResponse({
       res,
@@ -78,7 +86,7 @@ roomsRouter.get(
   async (req: Request, res: Response, next: NextFunction) => {
     return SuccessResponse({
       res,
-      data: await Service.checkout(req.params.id as string),
+      data: await Service.checkout(req.params.id as string, req.user!),
       statusCode: 200,
     })
   },

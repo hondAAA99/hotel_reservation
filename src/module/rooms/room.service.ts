@@ -3,6 +3,7 @@ import { reservationStatus } from '../../common/enum/reservation.base.enum.js'
 import { paymentService } from '../../common/service/payment.service.js'
 import {
   ErrorBadRequest,
+  ErrorForbidden,
   ErrorInternalServerError,
   ErrorNotFound,
 } from '../../common/utils/ErrorHandlers.js'
@@ -109,7 +110,6 @@ class roomServices {
       throw ErrorBadRequest('checkout must be after checkin')
     }
 
-
     const nights = Math.max(
       1,
       Math.round(
@@ -186,7 +186,7 @@ class roomServices {
     }
   }
 
-  async checkout(id: string) {
+  async checkout(id: string, userReq: HUDoc) {
     const reservation = await this._reservationRepo.findOne({
       filter: { _id: id, paid: reservationStatus.pending },
     })
@@ -195,7 +195,9 @@ class roomServices {
       throw ErrorNotFound('reservation not found')
     }
 
-    const user = await this._userRepo.findById({ id: reservation.guestId })
+    const user = await this._userRepo.findById({
+      id: { $and: [reservation.guestId, userReq.id] },
+    })
     if (!user) {
       throw ErrorNotFound('user not found')
     }
