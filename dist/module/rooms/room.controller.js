@@ -4,16 +4,18 @@ import { SuccessResponse } from '../../common/utils/ErrorHandlers.js';
 import { validation } from '../../common/middleware/validation.js';
 import { addRoomSchema, addRoomTypeSchema, confirmBookingSchema, searchRoomSchema, } from './room.validation.schema.js';
 import { authenticate } from '../../common/middleware/authentication.middleware.js';
+import { authorization } from '../../common/middleware/authorization.js';
+import { roleEnum } from '../../common/enum/user.enum.js';
 const roomsRouter = Router();
 const Service = roomServices;
-roomsRouter.get('/types', async (req, res, next) => {
+roomsRouter.get('/types', authenticate, authorization([roleEnum.admin]), async (req, res, next) => {
     return SuccessResponse({
         res,
         data: await Service.getRoomTypes(),
         statusCode: 200,
     });
 });
-roomsRouter.post('/types', validation(addRoomTypeSchema), async (req, res, next) => {
+roomsRouter.post('/types', validation(addRoomTypeSchema), authenticate, authorization([roleEnum.admin]), async (req, res, next) => {
     const result = await Service.addRoomType(req.body);
     return SuccessResponse({
         res,
@@ -21,7 +23,7 @@ roomsRouter.post('/types', validation(addRoomTypeSchema), async (req, res, next)
         statusCode: 201,
     });
 });
-roomsRouter.post('/', validation(addRoomSchema), async (req, res, next) => {
+roomsRouter.post('/', validation(addRoomSchema), authenticate, authorization([roleEnum.admin]), async (req, res, next) => {
     return SuccessResponse({
         res,
         data: await Service.addRoom(req.body),
@@ -45,8 +47,15 @@ roomsRouter.post('/confirm', authenticate, validation(confirmBookingSchema), asy
 roomsRouter.get('/confirm-stripe/:id', authenticate, async (req, res, next) => {
     return SuccessResponse({
         res,
-        data: await Service.checkout(req.params.id),
+        data: await Service.checkout(req.params.id, req.user),
         statusCode: 200,
+    });
+});
+roomsRouter.get('/all', async (req, res, next) => {
+    return SuccessResponse({
+        res,
+        data: await Service.getAllRooms(),
+        statusCode: 201,
     });
 });
 export default roomsRouter;

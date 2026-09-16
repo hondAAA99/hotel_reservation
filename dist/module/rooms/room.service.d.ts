@@ -1163,9 +1163,16 @@ declare class roomServices {
         };
         reservationID: string;
     }>;
-    checkout(id: string): Promise<{
+    checkout(id: string, userReq: HUDoc): Promise<{
         url: string | null;
     }>;
+    getAllRooms(): Promise<(import("mongoose").Document<unknown, {}, import("../../database/model/room.model.js").IRoom, {}, import("mongoose").DefaultSchemaOptions> & import("../../database/model/room.model.js").IRoom & {
+        _id: import("mongoose").Types.ObjectId;
+    } & {
+        __v: number;
+    } & {
+        id: string;
+    })[] | null>;
 }
 declare const _default: roomServices;
 export default _default;

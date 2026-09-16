@@ -1,7 +1,7 @@
 import { log } from 'node:console';
 import { reservationStatus } from '../../common/enum/reservation.base.enum.js';
 import { paymentService } from '../../common/service/payment.service.js';
-import { ErrorBadRequest, ErrorInternalServerError, ErrorNotFound, } from '../../common/utils/ErrorHandlers.js';
+import { ErrorBadRequest, ErrorForbidden, ErrorInternalServerError, ErrorNotFound, } from '../../common/utils/ErrorHandlers.js';
 import reservationRepo from '../../database/repo/reservation.repo.js';
 import roomRepo from '../../database/repo/room.repo.js';
 import roomTypesRepo from '../../database/repo/roomTypes.repo.js';
@@ -145,14 +145,16 @@ class roomServices {
             reservationID: id,
         };
     }
-    async checkout(id) {
+    async checkout(id, userReq) {
         const reservation = await this._reservationRepo.findOne({
             filter: { _id: id, paid: reservationStatus.pending },
         });
         if (!reservation) {
             throw ErrorNotFound('reservation not found');
         }
-        const user = await this._userRepo.findById({ id: reservation.guestId });
+        const user = await this._userRepo.findById({
+            id: { $and: [reservation.guestId, userReq.id] },
+        });
         if (!user) {
             throw ErrorNotFound('user not found');
         }
@@ -177,6 +179,9 @@ class roomServices {
         return {
             url: session.url,
         };
+    }
+    async getAllRooms() {
+        return await this._roomRepo.findAll({ filter: {} });
     }
 }
 export default new roomServices();
