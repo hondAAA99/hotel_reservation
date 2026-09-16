@@ -225,6 +225,10 @@ class roomServices {
       url: session.url,
     }
   }
+
+  async getAllRooms() {
+    return await this._roomRepo.findAll({ filter: {} });
+  }
 }
 
 export default new roomServices()
