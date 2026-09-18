@@ -227,7 +227,13 @@ class roomServices {
   }
 
   async getAllRooms() {
-    return await this._roomRepo.findAll({ filter: {} });
+    return await this._roomRepo.findAll({ filter: {} })
+  }
+
+  async getRoomById(id: string) {
+    return await this._roomRepo.findById({
+      id,
+    })
   }
 }
 

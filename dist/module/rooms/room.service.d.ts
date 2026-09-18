@@ -1173,6 +1173,13 @@ declare class roomServices {
     } & {
         id: string;
     })[] | null>;
+    getRoomById(id: string): Promise<(import("mongoose").Document<unknown, {}, import("../../database/model/room.model.js").IRoom, {}, import("mongoose").DefaultSchemaOptions> & import("../../database/model/room.model.js").IRoom & {
+        _id: import("mongoose").Types.ObjectId;
+    } & {
+        __v: number;
+    } & {
+        id: string;
+    }) | null>;
 }
 declare const _default: roomServices;
 export default _default;

@@ -68,6 +68,17 @@ roomsRouter.get(
     })
   },
 )
+
+roomsRouter.get(
+  '/:id',
+  async (req: Request, res: Response, next: NextFunction) => {
+    return SuccessResponse({
+      res,
+      data: await Service.getRoomById(req.params.id as string),
+      statusCode: 200,
+    })
+  },
+)
 roomsRouter.post(
   '/confirm',
   authenticate,

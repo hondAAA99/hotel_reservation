@@ -183,6 +183,11 @@ class roomServices {
     async getAllRooms() {
         return await this._roomRepo.findAll({ filter: {} });
     }
+    async getRoomById(id) {
+        return await this._roomRepo.findById({
+            id,
+        });
+    }
 }
 export default new roomServices();
 //# sourceMappingURL=room.service.js.map

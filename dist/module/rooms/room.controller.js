@@ -37,6 +37,13 @@ roomsRouter.get('/', validation(searchRoomSchema), async (req, res, next) => {
         statusCode: 200,
     });
 });
+roomsRouter.get('/:id', async (req, res, next) => {
+    return SuccessResponse({
+        res,
+        data: await Service.getRoomById(req.params.id),
+        statusCode: 200,
+    });
+});
 roomsRouter.post('/confirm', authenticate, validation(confirmBookingSchema), async (req, res, next) => {
     return SuccessResponse({
         res,
