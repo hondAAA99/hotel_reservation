@@ -43,6 +43,14 @@ roomsRouter.post(
   },
 )
 
+roomsRouter.get('/all', async (req, res, next) => {
+  return SuccessResponse({
+    res,
+    data: await Service.getAllRooms(),
+    statusCode: 201,
+  })
+})
+
 roomsRouter.post(
   '/',
   validation(addRoomSchema),
@@ -102,13 +110,5 @@ roomsRouter.get(
     })
   },
 )
-
-roomsRouter.get('/all', async (req, res, next) => {
-  return SuccessResponse({
-    res,
-    data: await Service.getAllRooms(),
-    statusCode: 201,
-  })
-})
 
 export default roomsRouter

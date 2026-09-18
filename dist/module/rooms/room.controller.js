@@ -23,6 +23,13 @@ roomsRouter.post('/types', validation(addRoomTypeSchema), authenticate, authoriz
         statusCode: 201,
     });
 });
+roomsRouter.get('/all', async (req, res, next) => {
+    return SuccessResponse({
+        res,
+        data: await Service.getAllRooms(),
+        statusCode: 201,
+    });
+});
 roomsRouter.post('/', validation(addRoomSchema), authenticate, authorization([roleEnum.admin]), async (req, res, next) => {
     return SuccessResponse({
         res,
@@ -56,13 +63,6 @@ roomsRouter.get('/confirm-stripe/:id', authenticate, async (req, res, next) => {
         res,
         data: await Service.checkout(req.params.id, req.user),
         statusCode: 200,
-    });
-});
-roomsRouter.get('/all', async (req, res, next) => {
-    return SuccessResponse({
-        res,
-        data: await Service.getAllRooms(),
-        statusCode: 201,
     });
 });
 export default roomsRouter;

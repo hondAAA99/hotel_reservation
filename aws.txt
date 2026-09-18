@@ -1,0 +1,1 @@
+ssh -i hotel_reservation.pem ubuntu@ec2-13-61-62-105.eu-north-1.compute.amazonaws.com
