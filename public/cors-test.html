@@ -118,7 +118,7 @@
         <input
           id="targetUrl"
           type="text"
-          value="http://localhost:3000/rooms"
+          value="https://handsaw-lubricant-yogurt.ngrok-free.dev"
           placeholder="https://api.example.com/test"
         />
       </div>
@@ -149,16 +149,18 @@
       }
 
       async function testSimpleGet() {
-        const url = targetUrl.value.trim()
-        if (!url) {
+        const rawUrl = targetUrl.value.trim()
+        if (!rawUrl) {
           setResult('Please enter a URL first.', 'error')
           return
         }
 
+        const url = rawUrl.replace(/\s+/g, '').replace(/\/$/, '')
+
         try {
-          setResult('Sending request 1: GET ...', '')
+          setResult(`Sending request 1: GET to ${url} ...`, '')
           const response = await fetch(url, {
-            method: 'POST',
+            method: 'GET',
             mode: 'cors',
           })
 
@@ -168,19 +170,24 @@
             response.ok ? 'success' : 'error',
           )
         } catch (error) {
-          setResult(`Request 1 failed\n${error.message}`, 'error')
+          setResult(`Request 1 failed\nURL: ${url}\n${error.message}`, 'error')
         }
       }
 
       async function testPreflightedPost() {
-        const url = targetUrl.value.trim()
-        if (!url) {
+        const rawUrl = targetUrl.value.trim()
+        if (!rawUrl) {
           setResult('Please enter a URL first.', 'error')
           return
         }
 
+        const url = rawUrl.replace(/\s+/g, '').replace(/\/$/, '')
+
         try {
-          setResult('Sending request 2: POST with custom headers ...', '')
+          setResult(
+            `Sending request 2: POST to ${url} with custom headers ...`,
+            '',
+          )
           const response = await fetch(url, {
             method: 'POST',
             mode: 'cors',
@@ -198,7 +205,7 @@
             response.ok ? 'success' : 'error',
           )
         } catch (error) {
-          setResult(`Request 2 failed\n${error.message}`, 'error')
+          setResult(`Request 2 failed\nURL: ${url}\n${error.message}`, 'error')
         }
       }
 

@@ -8,8 +8,21 @@ import roomsRouter from './module/rooms/room.controller.js';
 import cors from 'cors';
 import morgan from 'morgan';
 const app = express();
+const corsOptions = {
+    origin: '*',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Test-Header'],
+    optionsSuccessStatus: 204,
+};
 function bootstrap() {
-    app.use(express.json(), cors(), morgan('combined'));
+    app.use(express.json());
+    app.use(cors(corsOptions));
+    app.use(morgan('combined'));
+    // app.options('*', cors(corsOptions))
+    app.get('/', (_req, res) => {
+        res.json({ ok: true, message: 'CORS test server is alive' });
+    });
     app.get('/cors-test', (_req, res) => {
         res.sendFile(path.resolve(process.cwd(), 'public', 'cors-test.html'));
     });
