@@ -1,4 +1,5 @@
 import express from 'express'
+import path from 'node:path'
 import { PORT } from './config/config.js'
 import { connectToDataBase } from './database/connection.js'
 import { globalErrorHandling } from './common/middleware/error.middleware.js'
@@ -9,7 +10,11 @@ import morgan from 'morgan'
 const app = express()
 
 function bootstrap() {
-  app.use(express.json(), cors(), morgan('combined'), )
+  app.use(express.json(), cors(), morgan('combined'))
+  app.get('/cors-test', (_req, res) => {
+    res.sendFile(path.resolve(process.cwd(), 'public', 'cors-test.html'))
+  })
+
   connectToDataBase()
   app.use('/auth', authRouter)
   app.use('/rooms', roomsRouter)
