@@ -20,18 +20,8 @@ const corsOptions: cors.CorsOptions = {
 
 function bootstrap() {
   app.use(express.json())
-  app.use(cors(corsOptions))
+  app.use(cors({ origin: '*' }))
   app.use(morgan('combined'))
-
-  // app.options('*', cors(corsOptions))
-
-  app.get('/', (_req, res) => {
-    res.json({ ok: true, message: 'CORS test server is alive' })
-  })
-
-  app.get('/cors-test', (_req, res) => {
-    res.sendFile(path.resolve(process.cwd(), 'public', 'cors-test.html'))
-  })
 
   connectToDataBase()
   app.use('/auth', authRouter)

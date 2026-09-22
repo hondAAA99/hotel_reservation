@@ -8,8 +8,8 @@ const authRouter = Router()
 const Service = authService
 
 authRouter.post(
-  '/',
-  // validation(signUpSchema),
+  '/signup',
+  validation(signUpSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     return SuccessResponse({
       res,
@@ -19,9 +19,9 @@ authRouter.post(
   },
 )
 
-authRouter.get(
-  '/',
-  // validation(signInSchema),
+authRouter.post(
+  '/signIn',
+  validation(signInSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await Service.signIn(req.body)
