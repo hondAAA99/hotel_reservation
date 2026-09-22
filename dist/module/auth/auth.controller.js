@@ -1,11 +1,9 @@
 import { Router } from 'express';
 import authService from './auth.service.js';
 import { SuccessResponse } from '../../common/utils/ErrorHandlers.js';
-import { signInSchema, signUpSchema } from './auth.validation.schema.js';
-import { validation } from '../../common/middleware/validation.js';
 const authRouter = Router();
 const Service = authService;
-authRouter.post('/', 
+authRouter.post('/signup', 
 // validation(signUpSchema),
 async (req, res, next) => {
     return SuccessResponse({
@@ -14,7 +12,7 @@ async (req, res, next) => {
         statusCode: 201,
     });
 });
-authRouter.get('/', 
+authRouter.post('/signIn', 
 // validation(signInSchema),
 async (req, res, next) => {
     try {

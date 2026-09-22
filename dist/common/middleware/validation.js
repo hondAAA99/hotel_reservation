@@ -8,10 +8,10 @@ export function validation(schema) {
                 continue;
             const { success, error } = schema[key]?.safeParse(req[key]);
             if (!success) {
-                errArr.push(JSON.stringify({
+                errArr.push({
                     name: error.name,
                     message: error.message,
-                }));
+                });
             }
         }
         if (errArr.length)

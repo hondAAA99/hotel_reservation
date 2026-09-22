@@ -1,15 +1,13 @@
 import { Router, type NextFunction, type Request, type Response } from 'express'
 import authService from './auth.service.js'
 import { SuccessResponse } from '../../common/utils/ErrorHandlers.js'
-import { signInSchema, signUpSchema } from './auth.validation.schema.js'
-import { validation } from '../../common/middleware/validation.js'
 
 const authRouter = Router()
 const Service = authService
 
 authRouter.post(
   '/signup',
-  validation(signUpSchema),
+  // validation(signUpSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     return SuccessResponse({
       res,
@@ -21,7 +19,7 @@ authRouter.post(
 
 authRouter.post(
   '/signIn',
-  validation(signInSchema),
+  // validation(signInSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await Service.signIn(req.body)
