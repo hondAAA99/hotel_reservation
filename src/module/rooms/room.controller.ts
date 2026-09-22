@@ -11,12 +11,14 @@ import {
 import { authenticate } from '../../common/middleware/authentication.middleware.js'
 import { authorization } from '../../common/middleware/authorization.js'
 import { roleEnum } from '../../common/enum/user.enum.js'
+import { preAuthenticate } from '../../common/middleware/preAuthenticate.middleware.js'
 
 const roomsRouter = Router()
 const Service = roomServices
 
 roomsRouter.get(
   '/types',
+  preAuthenticate,
   authenticate,
   authorization([roleEnum.admin]),
   async (req: Request, res: Response, next: NextFunction) => {
@@ -30,6 +32,7 @@ roomsRouter.get(
 
 roomsRouter.post(
   '/types',
+  preAuthenticate,
   validation(addRoomTypeSchema),
   authenticate,
   authorization([roleEnum.admin]),
@@ -53,6 +56,7 @@ roomsRouter.get('/all', async (req, res, next) => {
 
 roomsRouter.post(
   '/',
+  preAuthenticate,
   validation(addRoomSchema),
   authenticate,
   authorization([roleEnum.admin]),
@@ -89,6 +93,7 @@ roomsRouter.get(
 )
 roomsRouter.post(
   '/confirm',
+  preAuthenticate,
   authenticate,
   validation(confirmBookingSchema),
   async (req: Request, res: Response, next: NextFunction) => {
@@ -101,6 +106,7 @@ roomsRouter.post(
 )
 roomsRouter.get(
   '/confirm-stripe/:id',
+  preAuthenticate,
   authenticate,
   async (req: Request, res: Response, next: NextFunction) => {
     return SuccessResponse({
