@@ -180,11 +180,19 @@ class roomServices {
         };
     }
     async getAllRooms() {
-        return await this._roomRepo.findAll({ filter: {} });
+        return await this._roomRepo.findAll({
+            filter: {},
+            options: {
+                populate: 'roomType',
+            },
+        });
     }
     async getRoomById(id) {
         return await this._roomRepo.findById({
             id,
+            options: {
+                populate: 'roomType',
+            },
         });
     }
 }

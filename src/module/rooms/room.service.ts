@@ -129,7 +129,7 @@ class roomServices {
 
     const roomTypeDocument = await this._roomTypesRepo.findById({
       id: roomType,
-    });
+    })
 
     if (!roomTypeDocument) {
       throw ErrorNotFound('room type does not exist')
@@ -226,12 +226,20 @@ class roomServices {
   }
 
   async getAllRooms() {
-    return await this._roomRepo.findAll({ filter: {} })
+    return await this._roomRepo.findAll({
+      filter: {},
+      options: {
+        populate: 'roomType',
+      },
+    })
   }
 
   async getRoomById(id: string) {
     return await this._roomRepo.findById({
       id,
+      options: {
+        populate: 'roomType',
+      },
     })
   }
 }
