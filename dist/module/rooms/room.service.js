@@ -80,7 +80,7 @@ class roomServices {
     async Booking(body, user) {
         const { roomNumber, roomType, checkIn, checkout, guests, fullName, email, phone, specialRequests, } = body;
         if (checkout <= checkIn) {
-            throw ErrorBadRequest('checkout must be after checkin');
+            throw ErrorBadRequest('checkout must be after check in');
         }
         const nights = Math.max(1, Math.round((new Date(checkout).getTime() - new Date(checkIn).getTime()) / 86400000));
         const room = await this._roomRepo.findOne({
@@ -92,8 +92,8 @@ class roomServices {
         if (!room) {
             throw ErrorNotFound('room is not available for booking');
         }
-        const roomTypeDocument = await this._roomTypesRepo.findOne({
-            filter: { name: roomType },
+        const roomTypeDocument = await this._roomTypesRepo.findById({
+            id: roomType,
         });
         if (!roomTypeDocument) {
             throw ErrorNotFound('room type does not exist');
