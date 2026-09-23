@@ -106,7 +106,7 @@ class roomServices {
     } = body
 
     if (checkout <= checkIn) {
-      throw ErrorBadRequest('checkout must be after checkin')
+      throw ErrorBadRequest('checkout must be after check in')
     }
 
     const nights = Math.max(
@@ -127,9 +127,9 @@ class roomServices {
       throw ErrorNotFound('room is not available for booking')
     }
 
-    const roomTypeDocument = await this._roomTypesRepo.findOne({
-      filter: { name: roomType },
-    })
+    const roomTypeDocument = await this._roomTypesRepo.findById({
+      id: roomType,
+    });
 
     if (!roomTypeDocument) {
       throw ErrorNotFound('room type does not exist')
