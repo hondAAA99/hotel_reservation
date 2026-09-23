@@ -196,7 +196,7 @@ class roomServices {
     }
 
     const user = await this._userRepo.findById({
-      id: { $and: [reservation.guestId, userReq.id] },
+      id: reservation.guestId,
     })
     if (!user) {
       throw ErrorNotFound('user not found')
