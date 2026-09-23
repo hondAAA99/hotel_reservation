@@ -153,7 +153,7 @@ class roomServices {
             throw ErrorNotFound('reservation not found');
         }
         const user = await this._userRepo.findById({
-            id: { $and: [reservation.guestId, userReq.id] },
+            id: reservation.guestId,
         });
         if (!user) {
             throw ErrorNotFound('user not found');
