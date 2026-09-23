@@ -56,13 +56,7 @@ declare abstract class BaseRepo<Tdocument> {
         search?: QueryFilter<Tdocument>;
         options?: QueryOptions<Tdocument>;
     }): Promise<{
-        meta: {
-            totalDoc: number;
-            currentPage: number;
-            totalPages: number;
-            limit: number;
-        };
-        data: any;
+        data: HydratedDocument<Tdocument>[] | null;
     }>;
 }
 export default BaseRepo;

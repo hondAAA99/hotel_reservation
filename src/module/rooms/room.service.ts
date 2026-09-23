@@ -1,4 +1,3 @@
-import { log } from 'node:console'
 import { reservationStatus } from '../../common/enum/reservation.base.enum.js'
 import { paymentService } from '../../common/service/payment.service.js'
 import {
@@ -85,10 +84,10 @@ class roomServices {
             reservationTo: { $lt: checkIn },
           },
         ],
-        roomCapacity: { $gte: guests },
+        roomCapacity: { $gte: guests ? guests : 1 },
       },
       options: {
-        populate: [{ path: 'roomType', select: 'roomAdvantages name -_id' }],
+        populate: 'roomType',
       },
     })
   }

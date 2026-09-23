@@ -158,30 +158,16 @@ abstract class BaseRepo<Tdocument> {
 
     let skip = (page - 1) * limit
 
-    const [data, totalDoc]: [any, number] = await Promise.all([
-      this.findAll({
-        filter: { ...(search ?? {}) },
-        options: {
-          skip,
-          limit,
-          options,
-          ...(options?.projection ? { projection: options?.projection } : {}),
-        },
-      }),
-      this._model.countDocuments({ ...(search ?? {}) }),
-    ])
-
-    let totalPages = totalDoc / limit
-
-    return {
-      meta: {
-        totalDoc,
-        currentPage: page,
-        totalPages,
+    const data = await this.findAll({
+      filter: { ...(search ?? {}) },
+      options: {
+        ...options,
+        skip,
         limit,
       },
-      data,
-    }
+    })
+
+    return { data }
   }
 }
 

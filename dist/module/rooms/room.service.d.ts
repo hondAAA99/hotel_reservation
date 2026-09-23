@@ -249,13 +249,13 @@ declare class roomServices {
             }>;
             options?: import("mongoose").QueryOptions<import("../../database/model/user.model.js").IUser>;
         }): Promise<{
-            meta: {
-                totalDoc: number;
-                currentPage: number;
-                totalPages: number;
-                limit: number;
-            };
-            data: any;
+            data: (import("mongoose").Document<unknown, {}, import("../../database/model/user.model.js").IUser, {}, import("mongoose").DefaultSchemaOptions> & import("../../database/model/user.model.js").IUser & {
+                _id: import("mongoose").Types.ObjectId;
+            } & {
+                __v: number;
+            } & {
+                id: string;
+            })[] | null;
         }>;
     }, _roomRepo?: {
         readonly _model: import("mongoose").Model<any, {}, {}, {}, any, any, any> | import("mongoose").Model<import("../../database/model/room.model.js").IRoom, {}, {}, {
@@ -641,13 +641,13 @@ declare class roomServices {
             }>;
             options?: import("mongoose").QueryOptions<import("../../database/model/room.model.js").IRoom>;
         }): Promise<{
-            meta: {
-                totalDoc: number;
-                currentPage: number;
-                totalPages: number;
-                limit: number;
-            };
-            data: any;
+            data: (import("mongoose").Document<unknown, {}, import("../../database/model/room.model.js").IRoom, {}, import("mongoose").DefaultSchemaOptions> & import("../../database/model/room.model.js").IRoom & {
+                _id: import("mongoose").Types.ObjectId;
+            } & {
+                __v: number;
+            } & {
+                id: string;
+            })[] | null;
         }>;
     }, _roomTypesRepo?: {
         readonly _model: import("mongoose").Model<any, {}, {}, {}, any, any, any> | import("mongoose").Model<import("../../database/model/roomTypes.model.js").IRoomTypes, {}, {}, {
@@ -846,13 +846,13 @@ declare class roomServices {
             }>;
             options?: import("mongoose").QueryOptions<import("../../database/model/roomTypes.model.js").IRoomTypes>;
         }): Promise<{
-            meta: {
-                totalDoc: number;
-                currentPage: number;
-                totalPages: number;
-                limit: number;
-            };
-            data: any;
+            data: (import("mongoose").Document<unknown, {}, import("../../database/model/roomTypes.model.js").IRoomTypes, {}, import("mongoose").DefaultSchemaOptions> & import("../../database/model/roomTypes.model.js").IRoomTypes & {
+                _id: import("mongoose").Types.ObjectId;
+            } & {
+                __v: number;
+            } & {
+                id: string;
+            })[] | null;
         }>;
     }, _reservationRepo?: {
         readonly _model: import("mongoose").Model<any, {}, {}, {}, any, any, any> | import("mongoose").Model<import("../../database/model/reservations.model.js").IReservation, {}, {}, {
@@ -1112,13 +1112,13 @@ declare class roomServices {
             }>;
             options?: import("mongoose").QueryOptions<import("../../database/model/reservations.model.js").IReservation>;
         }): Promise<{
-            meta: {
-                totalDoc: number;
-                currentPage: number;
-                totalPages: number;
-                limit: number;
-            };
-            data: any;
+            data: (import("mongoose").Document<unknown, {}, import("../../database/model/reservations.model.js").IReservation, {}, import("mongoose").DefaultSchemaOptions> & import("../../database/model/reservations.model.js").IReservation & {
+                _id: import("mongoose").Types.ObjectId;
+            } & {
+                __v: number;
+            } & {
+                id: string;
+            })[] | null;
         }>;
     }, _payment?: paymentService);
     getRoomTypes(): Promise<(import("mongoose").Document<unknown, {}, import("../../database/model/roomTypes.model.js").IRoomTypes, {}, import("mongoose").DefaultSchemaOptions> & import("../../database/model/roomTypes.model.js").IRoomTypes & {
@@ -1131,13 +1131,13 @@ declare class roomServices {
     addRoomType(body: addRoomTypeSchemaDTO): Promise<string>;
     addRoom(body: addRoomSchemaDTO): Promise<string>;
     searchAvailableRooms(query: searchRoomSchemaDTO): Promise<{
-        meta: {
-            totalDoc: number;
-            currentPage: number;
-            totalPages: number;
-            limit: number;
-        };
-        data: any;
+        data: (import("mongoose").Document<unknown, {}, import("../../database/model/room.model.js").IRoom, {}, import("mongoose").DefaultSchemaOptions> & import("../../database/model/room.model.js").IRoom & {
+            _id: import("mongoose").Types.ObjectId;
+        } & {
+            __v: number;
+        } & {
+            id: string;
+        })[] | null;
     }>;
     Booking(body: confirmBookingSchemaDTO, user: HUDoc): Promise<{
         message: string;

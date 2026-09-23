@@ -61,28 +61,15 @@ class BaseRepo {
         page = !page || page < 0 ? 1 : Number(page);
         let limit = 20;
         let skip = (page - 1) * limit;
-        const [data, totalDoc] = await Promise.all([
-            this.findAll({
-                filter: { ...(search ?? {}) },
-                options: {
-                    skip,
-                    limit,
-                    options,
-                    ...(options?.projection ? { projection: options?.projection } : {}),
-                },
-            }),
-            this._model.countDocuments({ ...(search ?? {}) }),
-        ]);
-        let totalPages = totalDoc / limit;
-        return {
-            meta: {
-                totalDoc,
-                currentPage: page,
-                totalPages,
+        const data = await this.findAll({
+            filter: { ...(search ?? {}) },
+            options: {
+                ...options,
+                skip,
                 limit,
             },
-            data,
-        };
+        });
+        return { data };
     }
 }
 export default BaseRepo;
