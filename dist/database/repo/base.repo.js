@@ -71,6 +71,9 @@ class BaseRepo {
         });
         return { data };
     }
+    async findManyAndUpdate({ filter, update, options, }) {
+        return await this._model.updateMany(filter, update);
+    }
 }
 export default BaseRepo;
 //# sourceMappingURL=base.repo.js.map

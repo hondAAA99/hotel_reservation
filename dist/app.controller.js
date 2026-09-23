@@ -7,6 +7,7 @@ import authRouter from './module/auth/auth.controller.js';
 import roomsRouter from './module/rooms/room.controller.js';
 import cors from 'cors';
 import morgan from 'morgan';
+import { roomAvailable } from './common/cron/roomAvailiabilty.cron.js';
 const app = express();
 const corsOptions = {
     origin: '*',
@@ -16,6 +17,7 @@ const corsOptions = {
     optionsSuccessStatus: 204,
 };
 function bootstrap() {
+    roomAvailable();
     app.use(express.json());
     app.use(cors({ origin: '*' }));
     app.use(morgan('combined'));

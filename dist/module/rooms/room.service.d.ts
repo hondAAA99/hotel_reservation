@@ -257,6 +257,19 @@ declare class roomServices {
                 id: string;
             })[] | null;
         }>;
+        findManyAndUpdate({ filter, update, options, }: {
+            filter: import("mongoose")._QueryFilter<{
+                password: string;
+                userName: string;
+                role: string;
+                email: string;
+                phoneNumber: string;
+                DateOfBirth: Date;
+                nationality: string;
+            }>;
+            update: import("mongoose").UpdateWithAggregationPipeline | import("mongoose").UpdateQuery<import("../../database/model/user.model.js").IUser>;
+            options?: (import("mongodb").UpdateOptions & import("mongoose").MongooseUpdateQueryOptions<import("../../database/model/user.model.js").IUser>) | null;
+        }): Promise<import("mongoose").UpdateWriteOpResult>;
     }, _roomRepo?: {
         readonly _model: import("mongoose").Model<any, {}, {}, {}, any, any, any> | import("mongoose").Model<import("../../database/model/room.model.js").IRoom, {}, {}, {
             id: string;
@@ -649,6 +662,38 @@ declare class roomServices {
                 id: string;
             })[] | null;
         }>;
+        findManyAndUpdate({ filter, update, options, }: {
+            filter: import("mongoose")._QueryFilter<{
+                roomNumber: number;
+                roomType: import("mongoose").Types.ObjectId;
+                reservoirId: import("mongoose").Types.ObjectId;
+                reservationFrom: Date;
+                reservationTo: Date;
+                price: Number;
+                roomCapacity: Number;
+                available: boolean;
+                "price.toString": (radix?: number) => string;
+                "price.toLocaleString": {
+                    (locales?: string | string[], options?: Intl.NumberFormatOptions): string;
+                    (locales?: Intl.LocalesArgument, options?: Intl.NumberFormatOptions): string;
+                };
+                "price.valueOf": () => number;
+                "price.toFixed": (fractionDigits?: number) => string;
+                "price.toExponential": (fractionDigits?: number) => string;
+                "price.toPrecision": (precision?: number) => string;
+                "roomCapacity.toString": (radix?: number) => string;
+                "roomCapacity.toLocaleString": {
+                    (locales?: string | string[], options?: Intl.NumberFormatOptions): string;
+                    (locales?: Intl.LocalesArgument, options?: Intl.NumberFormatOptions): string;
+                };
+                "roomCapacity.valueOf": () => number;
+                "roomCapacity.toFixed": (fractionDigits?: number) => string;
+                "roomCapacity.toExponential": (fractionDigits?: number) => string;
+                "roomCapacity.toPrecision": (precision?: number) => string;
+            }>;
+            update: import("mongoose").UpdateWithAggregationPipeline | import("mongoose").UpdateQuery<import("../../database/model/room.model.js").IRoom>;
+            options?: (import("mongodb").UpdateOptions & import("mongoose").MongooseUpdateQueryOptions<import("../../database/model/room.model.js").IRoom>) | null;
+        }): Promise<import("mongoose").UpdateWriteOpResult>;
     }, _roomTypesRepo?: {
         readonly _model: import("mongoose").Model<any, {}, {}, {}, any, any, any> | import("mongoose").Model<import("../../database/model/roomTypes.model.js").IRoomTypes, {}, {}, {
             id: string;
@@ -854,6 +899,19 @@ declare class roomServices {
                 id: string;
             })[] | null;
         }>;
+        findManyAndUpdate({ filter, update, options, }: {
+            filter: import("mongoose")._QueryFilter<{
+                name: string;
+                roomAdvantages: import("../../common/enum/room.enum.js").roomAdvantagesType;
+                "roomAdvantages.beds": string;
+                "roomAdvantages.view": string;
+                "roomAdvantages.area": string;
+                "roomAdvantages.breakfast": string;
+                "roomAdvantages.livingRoom": string | undefined;
+            }>;
+            update: import("mongoose").UpdateWithAggregationPipeline | import("mongoose").UpdateQuery<import("../../database/model/roomTypes.model.js").IRoomTypes>;
+            options?: (import("mongodb").UpdateOptions & import("mongoose").MongooseUpdateQueryOptions<import("../../database/model/roomTypes.model.js").IRoomTypes>) | null;
+        }): Promise<import("mongoose").UpdateWriteOpResult>;
     }, _reservationRepo?: {
         readonly _model: import("mongoose").Model<any, {}, {}, {}, any, any, any> | import("mongoose").Model<import("../../database/model/reservations.model.js").IReservation, {}, {}, {
             id: string;
@@ -1120,6 +1178,20 @@ declare class roomServices {
                 id: string;
             })[] | null;
         }>;
+        findManyAndUpdate({ filter, update, options, }: {
+            filter: import("mongoose")._QueryFilter<{
+                paid: string;
+                guestId: import("mongoose").Types.ObjectId;
+                roomId: import("mongoose").Types.ObjectId;
+                nights: number;
+                nightPrice: number;
+                total: number;
+                guests: number;
+                discount: number;
+            }>;
+            update: import("mongoose").UpdateWithAggregationPipeline | import("mongoose").UpdateQuery<import("../../database/model/reservations.model.js").IReservation>;
+            options?: (import("mongodb").UpdateOptions & import("mongoose").MongooseUpdateQueryOptions<import("../../database/model/reservations.model.js").IReservation>) | null;
+        }): Promise<import("mongoose").UpdateWriteOpResult>;
     }, _payment?: paymentService);
     getRoomTypes(): Promise<(import("mongoose").Document<unknown, {}, import("../../database/model/roomTypes.model.js").IRoomTypes, {}, import("mongoose").DefaultSchemaOptions> & import("../../database/model/roomTypes.model.js").IRoomTypes & {
         _id: import("mongoose").Types.ObjectId;

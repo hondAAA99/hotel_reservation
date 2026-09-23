@@ -1,4 +1,5 @@
-import type { QueryOptions, WithLevel1NestedPaths, UpdateQuery, ProjectionType, HydratedDocument, QueryFilter, Model, Schema } from 'mongoose';
+import type { UpdateOptions } from 'mongodb';
+import type { QueryOptions, WithLevel1NestedPaths, UpdateQuery, ProjectionType, HydratedDocument, QueryFilter, Model, Schema, UpdateWithAggregationPipeline, MongooseUpdateQueryOptions } from 'mongoose';
 declare abstract class BaseRepo<Tdocument> {
     protected readonly _model: Model<Tdocument>;
     constructor(_model: Model<Tdocument>);
@@ -58,6 +59,11 @@ declare abstract class BaseRepo<Tdocument> {
     }): Promise<{
         data: HydratedDocument<Tdocument>[] | null;
     }>;
+    findManyAndUpdate({ filter, update, options, }: {
+        filter: QueryFilter<Tdocument>;
+        update: UpdateQuery<Tdocument> | UpdateWithAggregationPipeline;
+        options?: (UpdateOptions & MongooseUpdateQueryOptions<Tdocument>) | null;
+    }): Promise<import("mongoose").UpdateWriteOpResult>;
 }
 export default BaseRepo;
 //# sourceMappingURL=base.repo.d.ts.map

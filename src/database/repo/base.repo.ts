@@ -1,3 +1,4 @@
+import type { UpdateOptions } from 'mongodb'
 import type {
   _QueryFilter,
   ModifyResult,
@@ -10,6 +11,8 @@ import type {
   QueryFilter,
   Model,
   Schema,
+  UpdateWithAggregationPipeline,
+  MongooseUpdateQueryOptions,
 } from 'mongoose'
 
 abstract class BaseRepo<Tdocument> {
@@ -168,6 +171,18 @@ abstract class BaseRepo<Tdocument> {
     })
 
     return { data }
+  }
+
+  async findManyAndUpdate({
+    filter,
+    update,
+    options,
+  }: {
+    filter: QueryFilter<Tdocument>
+    update: UpdateQuery<Tdocument> | UpdateWithAggregationPipeline
+    options?: (UpdateOptions & MongooseUpdateQueryOptions<Tdocument>) | null
+  }) {
+    return await this._model.updateMany(filter, update)
   }
 }
 
