@@ -19,7 +19,7 @@ const corsOptions = {
 function bootstrap() {
     roomAvailable();
     app.use(express.json());
-    app.use(cors({ origin: ['https://hotel-thk8.vercel.app', '*'] }));
+    app.use(cors({ origin: ['https://hotel-thk8.vercel.app'], credentials: true }));
     app.use(morgan('combined'));
     connectToDataBase();
     app.use('/auth', authRouter);
