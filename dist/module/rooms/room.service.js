@@ -84,7 +84,12 @@ class roomServices {
         }
         const nights = Math.max(1, Math.round((new Date(checkout).getTime() - new Date(checkIn).getTime()) / 86400000));
         const room = await this._roomRepo.findOne({
-            filter: { roomNumber, available: true },
+            filter: {
+                $or: [
+                    { roomNumber, available: true },
+                    { roomNumber, available: false, reservationTo: { $lt: checkIn } },
+                ],
+            },
             options: {
                 populate: [{ path: 'roomType', select: 'name roomAdvantages' }],
             },

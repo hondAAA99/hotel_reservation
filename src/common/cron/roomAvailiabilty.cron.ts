@@ -10,7 +10,7 @@ export function roomAvailable() {
     const [updatedDate, allRooms] = await Promise.all([
       roomsIns.findManyAndUpdate({
         filter: {
-          reservationTo: { $lte: today },
+          // reservationTo: { $lte: today },
         },
         update: {
           $set: {

@@ -6,17 +6,16 @@ import { addRoomSchema, addRoomTypeSchema, confirmBookingSchema, searchRoomSchem
 import { authenticate } from '../../common/middleware/authentication.middleware.js';
 import { authorization } from '../../common/middleware/authorization.js';
 import { roleEnum } from '../../common/enum/user.enum.js';
-import { preAuthenticate } from '../../common/middleware/preAuthenticate.middleware.js';
 const roomsRouter = Router();
 const Service = roomServices;
-roomsRouter.get('/types', preAuthenticate, authenticate, authorization([roleEnum.admin]), async (req, res, next) => {
+roomsRouter.get('/types', authenticate, authorization([roleEnum.admin]), async (req, res, next) => {
     return SuccessResponse({
         res,
         data: await Service.getRoomTypes(),
         statusCode: 200,
     });
 });
-roomsRouter.post('/types', preAuthenticate, validation(addRoomTypeSchema), authenticate, authorization([roleEnum.admin]), async (req, res, next) => {
+roomsRouter.post('/types', validation(addRoomTypeSchema), authenticate, authorization([roleEnum.admin]), async (req, res, next) => {
     const result = await Service.addRoomType(req.body);
     return SuccessResponse({
         res,
@@ -31,7 +30,7 @@ roomsRouter.get('/all', async (req, res, next) => {
         statusCode: 201,
     });
 });
-roomsRouter.post('/', preAuthenticate, 
+roomsRouter.post('/', 
 // validation(addRoomSchema),
 authenticate, authorization([roleEnum.admin]), async (req, res, next) => {
     return SuccessResponse({
@@ -54,14 +53,14 @@ roomsRouter.get('/:id', async (req, res, next) => {
         statusCode: 200,
     });
 });
-roomsRouter.post('/confirm', preAuthenticate, authenticate, validation(confirmBookingSchema), async (req, res, next) => {
+roomsRouter.post('/confirm', authenticate, validation(confirmBookingSchema), async (req, res, next) => {
     return SuccessResponse({
         res,
         data: await Service.Booking(req.body, req.user),
         statusCode: 201,
     });
 });
-roomsRouter.get('/confirm-stripe/:id', preAuthenticate, authenticate, async (req, res, next) => {
+roomsRouter.get('/confirm-stripe/:id', authenticate, async (req, res, next) => {
     return SuccessResponse({
         res,
         data: await Service.checkout(req.params.id, req.user),
