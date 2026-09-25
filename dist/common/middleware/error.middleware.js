@@ -3,7 +3,7 @@ export const globalErrorHandling = (err, req, res, next) => {
     const status = err.statusCode || 500;
     res.status(status).json({
         status,
-        err: { message: err.message },
+        err: err.message,
     });
 };
 //# sourceMappingURL=error.middleware.js.map

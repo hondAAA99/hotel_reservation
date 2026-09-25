@@ -10,6 +10,6 @@ export const globalErrorHandling = (
   const status = (err.statusCode as number) || 500
   res.status(status).json({
     status,
-    err: { message: err.message },
+    err: err.message,
   })
 }
