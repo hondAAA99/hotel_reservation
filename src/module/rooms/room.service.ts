@@ -117,7 +117,12 @@ class roomServices {
     )
 
     const room = await this._roomRepo.findOne({
-      filter: { roomNumber, available: true },
+      filter: {
+        $or: [
+          { roomNumber, available: true },
+          { roomNumber, available: false, reservationTo: { $lt: checkIn } },
+        ],
+      },
       options: {
         populate: [{ path: 'roomType', select: 'name roomAdvantages' }],
       },
