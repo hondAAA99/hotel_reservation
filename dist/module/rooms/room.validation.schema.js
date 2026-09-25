@@ -1,6 +1,9 @@
 import z from 'zod';
 import { genRules } from '../../common/utils/validation.generalRules.js';
 import { roomTypeEnum } from '../../common/enum/room.enum.js';
+import { Types } from 'mongoose';
+import { ObjectId } from 'mongodb';
+import { ErrorBadRequest } from '../../common/utils/ErrorHandlers.js';
 export const addRoomTypeSchema = {
     body: z.object({
         name: genRules.userName,
@@ -18,7 +21,7 @@ export const addRoomSchema = {
 export const confirmBookingSchema = {
     body: z.object({
         roomNumber: z.number().int().positive(),
-        roomType: z.enum(roomTypeEnum),
+        roomType: z.string(),
         checkIn: genRules.dates,
         checkout: genRules.dates,
         guests: genRules.guests,

@@ -26,11 +26,7 @@ export declare const addRoomSchema: {
 export declare const confirmBookingSchema: {
     body: z.ZodObject<{
         roomNumber: z.ZodNumber;
-        roomType: z.ZodEnum<{
-            classA: "classA";
-            classB: "classB";
-            classC: "classC";
-        }>;
+        roomType: z.ZodString;
         checkIn: z.ZodPipe<z.ZodString, z.ZodTransform<Date, string>>;
         checkout: z.ZodPipe<z.ZodString, z.ZodTransform<Date, string>>;
         guests: z.ZodTransform<number, unknown>;

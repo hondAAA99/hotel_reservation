@@ -1215,7 +1215,7 @@ declare class roomServices {
         message: string;
         stay: {
             roomNumber: number;
-            roomType: "classA" | "classB" | "classC";
+            roomType: string;
             checkIn: Date;
             checkout: Date;
             guests: number;
