@@ -20,7 +20,7 @@ roomsRouter.get(
   '/types',
   preAuthenticate,
   authenticate,
-  // authorization([roleEnum.admin]),
+  authorization([roleEnum.admin]),
   async (req: Request, res: Response, next: NextFunction) => {
     return SuccessResponse({
       res,
@@ -33,7 +33,7 @@ roomsRouter.get(
 roomsRouter.post(
   '/types',
   preAuthenticate,
-  // validation(addRoomTypeSchema),
+  validation(addRoomTypeSchema),
   authenticate,
   authorization([roleEnum.admin]),
   async (req: Request, res: Response, next: NextFunction) => {
@@ -71,7 +71,7 @@ roomsRouter.post(
 
 roomsRouter.get(
   '/',
-  // validation(searchRoomSchema),
+  validation(searchRoomSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     return SuccessResponse({
       res,
@@ -95,7 +95,7 @@ roomsRouter.post(
   '/confirm',
   preAuthenticate,
   authenticate,
-  // validation(confirmBookingSchema),
+  validation(confirmBookingSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     return SuccessResponse({
       res,
