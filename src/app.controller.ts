@@ -25,6 +25,7 @@ function bootstrap() {
   app.use(
     cors({ origin: ['https://hotel-thk8.vercel.app'], credentials: true }),
   )
+  app.options('*', cors())
   app.use(morgan('combined'))
 
   connectToDataBase()
