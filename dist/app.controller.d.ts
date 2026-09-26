@@ -1,3 +1,3 @@
-declare function bootstrap(): void;
+declare function bootstrap(): Promise<void>;
 export default bootstrap;
 //# sourceMappingURL=app.controller.d.ts.map

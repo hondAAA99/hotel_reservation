@@ -16,13 +16,13 @@ const corsOptions = {
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Test-Header'],
     optionsSuccessStatus: 204,
 };
-function bootstrap() {
-    roomAvailable();
+async function bootstrap() {
     app.use(express.json());
     app.use(cors({ origin: ['https://hotel-thk8.vercel.app'], credentials: true }));
     app.options('*', cors());
     app.use(morgan('combined'));
-    connectToDataBase();
+    await connectToDataBase();
+    roomAvailable();
     app.use('/auth', authRouter);
     app.use('/rooms', roomsRouter);
     app.use(globalErrorHandling);
