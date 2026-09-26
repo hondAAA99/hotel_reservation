@@ -22,7 +22,7 @@ const corsOptions: cors.CorsOptions = {
 async function bootstrap() {
   app.use(express.json())
   app.use(
-    cors({ origin: ['https://hotel-thk8.vercel.app'], credentials: true }),
+    cors({ origin: ['https://hotel-41k8.vercel.app'], credentials: true }),
   )
   app.options('*any', cors())
   app.use(morgan('combined'))
