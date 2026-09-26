@@ -79,75 +79,169 @@ class roomServices {
     }
     async Booking(body, user) {
         const { roomNumber, roomType, checkIn, checkout, guests, fullName, email, phone, specialRequests, } = body;
-        if (checkout <= checkIn) {
+        // --------------------------------------------------
+        // 1. Validate dates
+        // --------------------------------------------------
+        const checkInDate = new Date(checkIn);
+        const checkoutDate = new Date(checkout);
+        if (checkoutDate <= checkInDate) {
             throw ErrorBadRequest('checkout must be after check in');
         }
-        const nights = Math.max(1, Math.round((new Date(checkout).getTime() - new Date(checkIn).getTime()) / 86400000));
+        const nights = Math.max(1, Math.round((checkoutDate.getTime() - checkInDate.getTime()) / 86400000));
+        // --------------------------------------------------
+        // 2. Find available room
+        // --------------------------------------------------
         const room = await this._roomRepo.findOne({
             filter: {
                 $or: [
-                    { roomNumber, available: true },
-                    { roomNumber, available: false, reservationTo: { $lt: checkIn } },
+                    {
+                        roomNumber,
+                        available: true,
+                    },
+                    {
+                        roomNumber,
+                        available: false,
+                        reservationTo: {
+                            $lt: checkInDate,
+                        },
+                    },
                 ],
             },
             options: {
-                populate: [{ path: 'roomType', select: 'name roomAdvantages' }],
+                populate: [
+                    {
+                        path: 'roomType',
+                        select: 'name roomAdvantages',
+                    },
+                ],
             },
         });
         if (!room) {
             throw ErrorNotFound('room is not available for booking');
         }
+        // --------------------------------------------------
+        // 3. Validate room type
+        // --------------------------------------------------
         const roomTypeDocument = await this._roomTypesRepo.findById({
             id: roomType,
         });
         if (!roomTypeDocument) {
             throw ErrorNotFound('room type does not exist');
         }
+        // --------------------------------------------------
+        // 4. Calculate price
+        // --------------------------------------------------
         const nightPrice = Number(room.price);
         const discount = nights >= 3 ? 84 : 0;
         const price = nightPrice * nights;
         const total = Math.max(price - discount, 0);
+        // --------------------------------------------------
+        // 5. Reserve/lock the room
+        // --------------------------------------------------
         await this._roomRepo.findByIdAndUpdate({
             id: room._id,
             update: {
                 available: false,
-                reservationFrom: checkIn,
-                reservationTo: checkout,
+                reservationFrom: checkInDate,
+                reservationTo: checkoutDate,
             },
         });
-        const { id } = await this._reservationRepo.create({
-            discount,
-            guestId: user._id,
-            guests,
-            nightPrice,
-            nights,
-            roomId: room._id,
-            total,
-        });
-        return {
-            message: 'booking confirmed successfully',
-            stay: {
-                roomNumber,
-                roomType,
-                checkIn,
-                checkout,
-                guests,
-            },
-            guest: {
-                fullName,
-                email,
-                phone,
-                specialRequests,
-            },
-            priceSummary: {
-                roomName: roomTypeDocument.name,
-                nights,
-                nightPrice,
+        try {
+            // ------------------------------------------------
+            // 6. Create reservation
+            // ------------------------------------------------
+            const { id: reservationID } = await this._reservationRepo.create({
                 discount,
+                guestId: user._id,
+                guests,
+                nightPrice,
+                nights,
+                roomId: room._id,
                 total,
-            },
-            reservationID: id,
-        };
+                // Make sure your schema supports this.
+                paid: reservationStatus.pending,
+            });
+            // ------------------------------------------------
+            // 7. Create Stripe Checkout Session
+            // ------------------------------------------------
+            const frontendURL = process.env.FRONTEND_URL;
+            if (!frontendURL) {
+                throw new Error('FRONTEND_URL is not configured');
+            }
+            const session = await this._payment.checkout({
+                customer_email: email,
+                line_items: [
+                    {
+                        price_data: {
+                            currency: 'usd',
+                            product_data: {
+                                name: `${roomTypeDocument.name} - Room ${roomNumber}`,
+                            },
+                            unit_amount: Math.round(total * 100),
+                        },
+                        quantity: 1,
+                    },
+                ],
+                mode: 'payment',
+                success_url: `${frontendURL}/booking/success` +
+                    `?session_id={CHECKOUT_SESSION_ID}`,
+                cancel_url: `${frontendURL}/booking/cancel` + `?reservation_id=${reservationID}`,
+                metadata: {
+                    reservationID: reservationID.toString(),
+                    roomID: room._id.toString(),
+                    userID: user._id.toString(),
+                },
+            });
+            if (!session.url) {
+                throw new Error('Stripe checkout URL was not generated');
+            }
+            // ------------------------------------------------
+            // 8. Return everything frontend needs
+            // ------------------------------------------------
+            return {
+                message: 'booking created successfully',
+                reservationID,
+                payment: {
+                    status: reservationStatus.pending,
+                    url: session.url,
+                },
+                stay: {
+                    roomNumber,
+                    roomType,
+                    checkIn: checkInDate,
+                    checkout: checkoutDate,
+                    guests,
+                },
+                guest: {
+                    fullName,
+                    email,
+                    phone,
+                    specialRequests,
+                },
+                priceSummary: {
+                    roomName: roomTypeDocument.name,
+                    nights,
+                    nightPrice,
+                    discount,
+                    total,
+                },
+            };
+        }
+        catch (error) {
+            // ------------------------------------------------
+            // IMPORTANT:
+            // If reservation/Stripe creation fails, release room
+            // ------------------------------------------------
+            await this._roomRepo.findByIdAndUpdate({
+                id: room._id,
+                update: {
+                    available: true,
+                    reservationFrom: null,
+                    reservationTo: null,
+                },
+            });
+            throw error;
+        }
     }
     async checkout(id, userReq) {
         const reservation = await this._reservationRepo.findOne({

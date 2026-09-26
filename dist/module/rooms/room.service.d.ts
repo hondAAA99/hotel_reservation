@@ -1,3 +1,4 @@
+import { reservationStatus } from '../../common/enum/reservation.base.enum.js';
 import { paymentService } from '../../common/service/payment.service.js';
 import type { HUDoc } from '../../database/model/user.model.js';
 import type { addRoomSchemaDTO, addRoomTypeSchemaDTO, confirmBookingSchemaDTO, searchRoomSchemaDTO } from './room.dto.js';
@@ -1213,6 +1214,11 @@ declare class roomServices {
     }>;
     Booking(body: confirmBookingSchemaDTO, user: HUDoc): Promise<{
         message: string;
+        reservationID: string;
+        payment: {
+            status: reservationStatus;
+            url: string;
+        };
         stay: {
             roomNumber: number;
             roomType: string;
@@ -1233,7 +1239,6 @@ declare class roomServices {
             discount: number;
             total: number;
         };
-        reservationID: string;
     }>;
     checkout(id: string, userReq: HUDoc): Promise<{
         url: string | null;
